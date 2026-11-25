@@ -1,19 +1,12 @@
 name: Authorized Pages preview
 on:
   workflow_dispatch:
-    inputs:
-      sha:
-        description: Full reviewed commit SHA from main (or its history for rollback)
-        required: true
-        type: string
-      approval_issue:
-        description: Producer publication approval reference
-        required: true
-        type: string
+  push:
+    branches: [main]
 permissions:
   contents: read
 concurrency:
-  group: pages
+  group: ${{ github.ref == 'refs/heads/main' && 'pages' || github.ref }}
   cancel-in-progress: false
 jobs:
   build:
@@ -21,22 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      VITE_BASE_PATH: /${{ github.event.repository.name }}/
+      VITE_BASE_PATH: /kitchen-chaos-3d/
+      VITE_BUILD_SHA: ${{ github.sha }}
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
-          fetch-depth: 0
           persist-credentials: false
-      - name: Verify reviewed commit
-        env:
-          REVIEWED_SHA: ${{ inputs.sha }}
-          APPROVAL: ${{ inputs.approval_issue }}
-        run: |
-          [[ "$REVIEWED_SHA" =~ ^[0-9a-f]{40}$ ]]
-          [[ -n "${APPROVAL//[[:space:]]/}" ]]
-          git merge-base --is-ancestor "$REVIEWED_SHA" HEAD
-          git checkout --detach "$REVIEWED_SHA"
-          echo "VITE_BUILD_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .nvmrc
@@ -55,23 +38,46 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
+      contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Check that the verified commit is still the tip of main
+        id: freshness
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tip="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')"
+          if [[ "$tip" == "$GITHUB_SHA" ]]; then
+            echo 'current=true' >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Skipping superseded preview $GITHUB_SHA (main is at $tip)"
+          fi
       - uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
         id: deployment
+        if: steps.freshness.outputs.current == 'true'
       - name: Verify hosted entry point and resolved build
+        if: steps.freshness.outputs.current == 'true'
         env:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
-          REVIEWED_SHA: ${{ inputs.sha }}
+          EXPECTED_SHA: ${{ github.sha }}
         run: |
-          curl --fail --silent --show-error --retry 6 --retry-all-errors "$PAGE_URL" -o /tmp/pages-index.html
-          main="$(sed -n 's/.*src="\([^"]*\/assets\/[^"]*\.js\)".*/\1/p' /tmp/pages-index.html)"
-          [[ "$main" == /* ]]
           origin="$(echo "$PAGE_URL" | cut -d/ -f1-3)"
-          curl --fail --silent --show-error "$origin$main" -o /tmp/pages-main.js
-          grep -Fq "$REVIEWED_SHA" /tmp/pages-main.js
+          for attempt in {1..12}; do
+            if curl --fail --silent --show-error --max-time 15 "$PAGE_URL" -o /tmp/pages-index.html; then
+              main="$(sed -n 's/.*src="\([^"]*\/assets\/[^"]*\.js\)".*/\1/p' /tmp/pages-index.html)"
+              if [[ "$main" == /kitchen-chaos-3d/assets/* ]] &&
+                curl --fail --silent --show-error --max-time 15 "$origin$main" -o /tmp/pages-main.js &&
+                grep -Fq "$EXPECTED_SHA" /tmp/pages-main.js; then
+                exit 0
+              fi
+            fi
+            if (( attempt < 12 )); then sleep 5; fi
+          done
+          echo "::error::Hosted preview did not serve expected build $EXPECTED_SHA"
+          exit 1
