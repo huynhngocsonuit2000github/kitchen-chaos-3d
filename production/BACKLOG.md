@@ -5,11 +5,11 @@
 | M0-01 | Bootstrap Vite/TS/Three.js and test scripts | P0 | M0 | none | npm ci/typecheck/lint/test/build and browser boot pass; record versions; no gameplay scope | done |
 | M0-02 | Validate asset sourcing and hero target | P0 | M0 | M0-01 | Inspect included visual targets; prove tool/asset feasibility, record rights and missing assets | done |
 | M0-03 | Adopt CI templates and validate content fixtures | P0 | M0 | M0-01 | Actual CI or local equivalent; schema example review; G0 evidence | done |
-| M1-01 | Movement, grid collision, input and switching | P0 | M1 | G0 | WASD/E/Q work; no wall traversal; focus loss pauses | planned |
-| M1-02 | Atomic item transfers and station state | P0 | M1 | M1-01 | No duplication on repeated input; chop/cook/wash timers deterministic | planned |
-| M1-03 | Orders, recipes, serving and shift results | P0 | M1 | M1-02 | Complete three recipes; wrong/raw rejected; closing settles once; restart works | planned |
-| M1-04 | Graybox playtest and G1 | P0 | M1 | M1-03 | Full shift evidence plus screenshot; pause/restart/lose tested | planned |
-| M1-05 | Prepare authorized preview candidate | P1 | M1 | M1-04 | Dist artifact, build label, deployment checklist; publish only with authorization | planned |
+| M1-01 | Movement, grid collision, input and switching | P0 | M1 | G0 | WASD/E/Q work; no wall traversal; focus loss pauses | done |
+| M1-02 | Atomic item transfers and station state | P0 | M1 | M1-01 | No duplication on repeated input; chop/cook/wash timers deterministic | done |
+| M1-03 | Orders, recipes, serving and shift results | P0 | M1 | M1-02 | Complete three recipes; wrong/raw rejected; closing settles once; restart works | done |
+| M1-04 | Graybox playtest and G1 | P0 | M1 | M1-03 | Full shift evidence plus screenshot; pause/restart/lose tested | done |
+| M1-05 | Prepare authorized preview candidate | P1 | M1 | M1-04 | Dist artifact, build label, deployment checklist; publish only with authorization | done |
 | M2-01 | Hero chef and kitchen asset pack | P0 | M2 | G1 | Verified licensed GLBs, rig, scale, materials and gameplay screenshot | planned |
 | M2-02 | Food models and state visuals | P0 | M2 | G1 | All three dishes and ingredient states visually distinct; no placeholders | planned |
 | M2-03 | Animation, VFX, HUD and audio | P0 | M2 | M2-01,M2-02 | Interaction clips and cues verified; no occlusion/clipping/loop leaks | planned |

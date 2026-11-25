@@ -1,0 +1,160 @@
+Source 5d818427a52abe377f77cd54561952be327d4343
+Playwright serial configuration c6a6ef3
+VITE_BASE_PATH=/kitchen-chaos-3d/
+PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
+
+$ npm ci --cache /workspace/.npm-cache
+$ npm run typecheck
+$ npm run lint
+$ npm test
+$ npm run build
+$ actionlint .github/workflows/ci.yml templates/github-actions/pages.yml
+$ npm run test:e2e -- --workers=2 --output=/tmp/m1-5d81842-results
+v24.22.3
+11.19.1
+Chromium 156.0.8078.79 built on Debian GNU/Linux 13 (trixie)
+
+added 142 packages in 4s
+
+> kitchen-chaos-3d@0.1.0-preview.1 typecheck
+> tsc --noEmit
+
+npm notice
+npm notice New major version of npm available! 11.19.1 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice
+
+> kitchen-chaos-3d@0.1.0-preview.1 lint
+> eslint .
+
+npm notice
+npm notice New major version of npm available! 11.19.1 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice
+
+> kitchen-chaos-3d@0.1.0-preview.1 test
+> vitest run
+
+
+ RUN  v5.1.2 /workspace/kitchen-chaos-3d
+
+
+ Test Files  2 passed (2)
+      Tests  13 passed (13)
+   Start at  13:22:55
+   Duration  470ms (import 46%, transform 42%, tests 10%, worker 3%)
+
+npm notice
+npm notice New major version of npm available! 11.19.1 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice
+
+> kitchen-chaos-3d@0.1.0-preview.1 build
+> vite build
+
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 110 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                           0.74 kB │ gzip:   0.41 kB
+dist/assets/EXAMPLE_PACK-DTskag1v.json    2.49 kB │ gzip:   0.48 kB
+dist/assets/index-CiKjnDxK.css            3.98 kB │ gzip:   1.56 kB
+dist/assets/index-CqV4kILV.js             3.48 kB │ gzip:   1.67 kB
+dist/assets/pack-G0rULBN-.js             86.55 kB │ gzip:  24.80 kB
+dist/assets/ui-CqJKdq91.js              555.68 kB │ gzip: 140.80 kB
+
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 299ms
+npm notice
+npm notice New major version of npm available! 11.19.1 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice
+
+> kitchen-chaos-3d@0.1.0-preview.1 test:e2e
+> playwright test --workers=2 --output=/tmp/m1-5d81842-results
+
+[WebServer] (node:3526) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3539) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 2 workers
+
+(node:3559) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3558) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [chromium-1280x720] › tests/e2e/boot.spec.ts:3:1 › Q01 boots the production build with clean browser and asset requests (4.2s)
+  ✓  3 [chromium-1280x720] › tests/e2e/boot.spec.ts:25:1 › Q01 recovers from a missing content asset through a keyboard retry (1.7s)
+  ✓  4 [chromium-1280x720] › tests/e2e/boot.spec.ts:39:1 › Q01 explains how to recover when WebGL 2 is unavailable (932ms)
+(node:3945) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 [chromium-1920x1080] › tests/e2e/boot.spec.ts:3:1 › Q01 boots the production build with clean browser and asset requests (3.7s)
+  ✓  6 [chromium-1920x1080] › tests/e2e/boot.spec.ts:25:1 › Q01 recovers from a missing content asset through a keyboard retry (2.0s)
+  ✓  7 [chromium-1920x1080] › tests/e2e/boot.spec.ts:39:1 › Q01 explains how to recover when WebGL 2 is unavailable (1.0s)
+  ✘  1 [chromium-1280x720] › tests/e2e/shift.spec.ts:29:1 › Q02–Q06, Q11, Q15–Q17 cooks all three recipes through keyboard input and settles a full shift (3.0m)
+  ✓  8 [chromium-1920x1080] › tests/e2e/shift.spec.ts:29:1 › Q02–Q06, Q11, Q15–Q17 cooks all three recipes through keyboard input and settles a full shift (3.0m)
+
+
+  1) [chromium-1280x720] › tests/e2e/shift.spec.ts:29:1 › Q02–Q06, Q11, Q15–Q17 cooks all three recipes through keyboard input and settles a full shift
+
+    Test timeout of 180000ms exceeded.
+
+    Error Context: ../../tmp/m1-5d81842-results/shift-Q02–Q06-Q11-Q15–Q17--867bc-ut-and-settles-a-full-shift-chromium-1280x720/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../tmp/m1-5d81842-results/shift-Q02–Q06-Q11-Q15–Q17--867bc-ut-and-settles-a-full-shift-chromium-1280x720/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../tmp/m1-5d81842-results/shift-Q02–Q06-Q11-Q15–Q17--867bc-ut-and-settles-a-full-shift-chromium-1280x720/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium-1280x720] › tests/e2e/shift.spec.ts:29:1 › Q02–Q06, Q11, Q15–Q17 cooks all three recipes through keyboard input and settles a full shift
+  7 passed (3.3m)
+npm notice
+npm notice New major version of npm available! 11.19.1 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice
+
+Exit codes: install 0, typecheck 0, lint 0, unit 0, build 0, actionlint 0, concurrent browser run 1.
+
+Concurrent run passed both boot suites and the 1920x1080 shift. The 1280x720 shift timed out after capturing closure.
+
+
+
+$ npm run test:e2e -- --project=chromium-1280x720 tests/e2e/shift.spec.ts --output=/tmp/m1-serial-results
+
+> kitchen-chaos-3d@0.1.0-preview.1 test:e2e
+> playwright test --project=chromium-1280x720 tests/e2e/shift.spec.ts --output=/tmp/m1-serial-results
+
+[WebServer] (node:4722) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:4755) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium-1280x720] › tests/e2e/shift.spec.ts:29:1 › Q02–Q06, Q11, Q15–Q17 cooks all three recipes through keyboard input and settles a full shift (1.2m)
+
+  1 passed (1.2m)
+npm notice
+npm notice New major version of npm available! 11.19.1 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice
+
+Serial recovery exit: 0. Unique passing browser cases across the two invocations: 8 of 8.

@@ -50,3 +50,36 @@ The first typecheck caught a missing `this` annotation in the browser test shim.
 - Blender 4.3.2 (`blender -b --python-exit-code 1 --python probe.py`, exit 0) exported an original beveled cabinet with a teal material, a named `food_socket`, and one second of translation animation. The scratch GLB was 15,572 bytes. glTF Validator 2.0.0-dev.3.10 found 0 errors and 0 warnings (two informational notices for an unused UV attribute and the socket node). glTF Transform 4.5.1 `inspect` reported 188 triangles and 1×0.9×1 m bounds with the base at y=0. A Three.js GLTFLoader and AnimationMixer check confirmed the bounds, socket name and clip playback. Blender's Draco library was unavailable. The uncompressed export succeeded.
 - FFmpeg 7.1.5 encoded a 0.25-second original test tone to Vorbis (`ffmpeg -f lavfi -i sine=frequency=440:duration=0.25 -c:a libvorbis probe.ogg`, exit 0). `ffprobe` confirmed the codec and duration. GIMP 3.0.4 and Inkscape 1.4 reported their versions. The test outputs are scratch feasibility evidence. The asset audit confirmed all 49 runtime manifest entries still missing.
 - For M2, start with Max's shared rig and carry socket, then a modular cabinet/stove and layered burgers. Validate exported GLB scale, skinning, named clips, materials and sockets at the gameplay camera before variants. Produce audio from original recordings or synthesis, and verify loops and clipping separately. Keep source files outside the bundle. Before incorporating any third-party asset, verify the exact file, source, creator, license, redistributability, attribution and checksum in the ledger. No third-party media were imported. Final character rig, art fit, audio quality and gameplay-camera review (Q12) remain NOT_RUN.
+
+## M1 Burger Town graybox
+
+Tested source `5d818427a52abe377f77cd54561952be327d4343`, preview `0.1.0-preview.1`, seed 42, Linux x86-64, Node 24.22.3, headless Chromium 156.0.8078.79 with SwiftShader. The build and browser tests use the project Pages base. See the [evidence index](evidence/5d81842/README.md) for captured scenes and command logs.
+
+| QA ID | Status | Actual result |
+|---|---|---|
+| Q01 | PASS | Boot/start, live clock, clean network and console, missing-content keyboard retry, and actionable WebGL 2 failure. |
+| Q02 | PASS | Simulation stops walk and dash at walls. Browser keyboard switches chefs and blur pauses the game. |
+| Q03 | PASS | Repeated pickup and invalid placement charge once and preserve ownership. |
+| Q04 | PASS | Browser serves Classic, Cheese and Garden for $44 total sales. Empty plate rejected in browser. Simulation checks raw, burnt and extra ingredients, oldest matching ticket and reduced overcook tip. |
+| Q05 | PASS | Exact simulation boundaries through burn. Browser cook freezes on blur and reaches perfect after resuming. |
+| Q06 | PASS | Browser shift closes at 0:00, records misses and a single loss settlement, then retries and confirms restart. Unit simulation reaches the target and validates next-day cash input. |
+| Q11 | PASS (M1) | Desktop screenshots at both required sizes, keyboard start and retry, and modal focus. Final accessibility review remains scheduled. |
+| Q14 | PASS (candidate), NOT_RUN (hosted) | Project-base build, local static HTTP/MIME and embedded build smoke, and workflow lint. Hosted smoke and rollback await publication. |
+| Q15 | PASS | Interrupted cook-side workflow and chop progress in browser, interruption of chop and wash in simulation. |
+| Q16 | PASS | Simulation confirms intentional waste increments and plate retention. |
+| Q17 | PASS (M1) | Browser verifies ticket labels, clock, serving counts and results including $44 sales. Simulation checks tip and settlement math. |
+| Q19 | PASS (M1) | Existing schema and reference tests plus a reachable approach for every M1 station. |
+| Q07–Q10, Q12–Q13, Q18, Q20–Q22 | NOT_RUN (M1) | Staff, management, saves, audio, final art, hardware performance, seating and later modes are scheduled after this gate. |
+
+### Defects found and addressed
+
+- M1-QA-01 (P2) · At 1280×720 the initial orthographic fit clipped the board at the stage edges. Enlarged the view bounds and checked the gameplay composition in the final captures. Comparison in the evidence index.
+- M1-QA-02 (P3) · The renderer's opaque clear color covered the CSS background. Enabled a transparent canvas and checked the background and cabinet contrast in the final gameplay captures.
+- M1-QA-03 (test fixture) · The waste-bin unit fixture approached from the occupied rack tile. Corrected the approach to the reachable east tile and reran the test.
+- M1-QA-04 (environment) · The initial `npm ci` attempted to write to the unavailable home npm cache. Using `--cache /workspace/.npm-cache` restored locked installation. A preview-port collision with an earlier test run was resolved by stopping the earlier run before final verification.
+
+The automated real-input run intentionally serves three orders and exercises loss. A seeded unit scenario verifies the win/settlement rule. Human tuning, a full winning keyboard run, and performance on representative hardware are still pending.
+
+The concurrent software-WebGL run passed seven browser cases and hit the 180-second timeout in the 1280×720 test after capturing results. Commit `c6a6ef3` runs the two Playwright projects serially. Browser verification uses the same `5d81842` application build. Vite emitted a size warning for the 556 kB minified Three.js/UI chunk, which was 141 kB gzip. The build completed successfully.
+
+Local results across the final run and serial recovery were 13 passing unit checks and 8 passing browser cases. The serial 1280×720 shift passed in 1.2 minutes. Install, typecheck, lint, build, workflow lint and static Pages smoke returned exit 0. The closing receipt shows nine misses, $7 tips, $9 ingredient costs and $122 final cash.

@@ -6,7 +6,7 @@ const bootError = document.querySelector<HTMLParagraphElement>('#boot-error')!;
 const retry = document.querySelector<HTMLButtonElement>('#retry')!;
 const build = document.querySelector<HTMLElement>('#build')!;
 
-build.textContent = `Foundation ${__BUILD_VERSION__} · ${__BUILD_SHA__}`;
+build.textContent = `M1 graybox preview · ${__BUILD_VERSION__} · ${__BUILD_SHA__}`;
 
 async function boot() {
   const restoreFocus = document.activeElement === retry;
@@ -21,14 +21,14 @@ async function boot() {
     ]);
     if (!response.ok) throw new Error('Could not load the content fixture.');
     const pack = parseContentPack(await response.json());
-    const { verifyRenderer } = await import('./rendering/probe');
-    verifyRenderer();
+    const { mountGame } = await import('./game/ui');
+    mountGame(pack);
     build.textContent += ` · Content schema ${pack.schemaVersion}`;
-    status.textContent = 'Kitchen foundation ready.';
+    status.textContent = 'Kitchen ready.';
     if (restoreFocus) {
-      status.tabIndex = -1;
-      status.focus();
+      document.querySelector<HTMLButtonElement>('#primary')?.focus();
     }
+    status.hidden = true;
     retry.hidden = true;
   } catch (error) {
     status.textContent = 'The kitchen could not start.';
