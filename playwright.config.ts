@@ -5,6 +5,8 @@ const baseURL = new URL(base, 'http://127.0.0.1:4173').href;
 
 export default defineConfig({
   testDir: './tests/e2e',
+  // Both viewport projects render with software WebGL in headless CI.
+  workers: 1,
   reporter: [['list'], ['html', { open: 'never' }]],
   forbidOnly: Boolean(process.env.CI),
   use: { baseURL, trace: 'retain-on-failure' },
