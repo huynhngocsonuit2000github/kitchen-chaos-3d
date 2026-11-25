@@ -1,5 +1,5 @@
 # Quality gates v1.1
-G0 and G1 are PASS. G2–G4 are NOT_RUN.
+G0 and G1 are PASS. G2 is BLOCKED. G3 and G4 are NOT_RUN.
 | Gate | Type | Required evidence | Stop condition |
 |---|---|---|---|
 | G0 | Human | GDD/blueprint/defaults, visual targets, tool feasibility, asset rights plan, initial acceptance/test plan and M0 checks | Producer approves scope and target before M1 |
@@ -22,3 +22,7 @@ Foundation commit `4f739fd`. Local build, browser smoke, fixture validation and 
 2026-11-25 · Verified source `5d818427a52abe377f77cd54561952be327d4343`. A full seeded shift runs through delivery of all three burger recipes, invalid delivery recovery, loss, pause, restart and settlement. The production build passed local checks, and screenshots show the labeled original graybox assets. [Run logs and captures](../reports/evidence/5d81842/README.md) · [QA status and limitations](../reports/QA_REPORT.md).
 
 Producer owns the M2 scope decision and any Pages publication approval. The G1 decision covers the local prototype. Customer seating, premium art and human playtesting are tracked at G2.
+
+## G2 candidate review — BLOCKED
+
+Source `dca5fda`, 2026-11-25. The [M2 QA report](../reports/QA_REPORT.md#m2-burger-town-vertical-slice-candidate) records the visual gap, device measurements and open acceptance items. Structural GLB and functional evidence support continued M2 review. Final art, representative Chrome/Edge/Firefox device budgets, career playtest and Producer approval remain open. No deployment or content expansion was authorized.

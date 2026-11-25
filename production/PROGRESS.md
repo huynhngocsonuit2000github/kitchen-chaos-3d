@@ -21,3 +21,9 @@ Checks, exit codes, defects, screenshots and asset details are in [QA_REPORT.md]
 Verification and known limits are in the [QA report](../reports/QA_REPORT.md). Screenshots, logs and source identity are in the [evidence index](../reports/evidence/5d81842/README.md).
 
 G0 **PASS** by Producer approval. G1 **PASS** for the graybox prototype. G2–G4 **NOT_RUN**. The Producer owns the next milestone decision and separate Pages publication approval. Human balance/play testing and hardware performance measurements remain ahead.
+
+## M2 Burger Town vertical slice candidate
+
+On 2026-11-25 the Producer reported that all seven M1 live playtest checks passed and authorized M2. The M2 candidate starts from `ed40078`. Source revision `dca5fda` includes original Blender GLBs and source scenes, layered food states, shared chef and guest armatures, kitchen lighting and effects, service audio, and a planning UI. Quick shift preserves the M1 seed-42 Day 3 scenario. Career adds Day 1 practice, seven day configurations, seated customers, partner prep/wash, appliance placement, purchases, undo, and versioned saves.
+
+M2-01 through M2-05 are in review. M2-06 remains open for visual acceptance, representative device testing, and an integrated human run. See [M2 QA](../reports/QA_REPORT.md#m2-burger-town-vertical-slice-candidate) for evidence and defects. G2 has not passed. Production publication and M3 remain pending Producer authorization.
