@@ -6,7 +6,7 @@ const bootError = document.querySelector<HTMLParagraphElement>('#boot-error')!;
 const retry = document.querySelector<HTMLButtonElement>('#retry')!;
 const build = document.querySelector<HTMLElement>('#build')!;
 
-build.textContent = `M1 graybox preview · ${__BUILD_VERSION__} · ${__BUILD_SHA__}`;
+build.textContent = `M2 work in progress · ${__BUILD_VERSION__} · ${__BUILD_SHA__}`;
 
 async function boot() {
   const restoreFocus = document.activeElement === retry;
@@ -22,7 +22,7 @@ async function boot() {
     if (!response.ok) throw new Error('Could not load the content fixture.');
     const pack = parseContentPack(await response.json());
     const { mountGame } = await import('./game/ui');
-    mountGame(pack);
+    await mountGame(pack);
     build.textContent += ` · Content schema ${pack.schemaVersion}`;
     status.textContent = 'Kitchen ready.';
     if (restoreFocus) {

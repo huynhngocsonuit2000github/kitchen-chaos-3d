@@ -163,3 +163,61 @@ describe('M1 simulation', () => {
     expect(next.cash).toBe(cash);
   });
 });
+
+describe('M2 career service', () => {
+  it('Q07 routes the partner to prep and releases the task on manual takeover', () => {
+    const game = new Shift(pack, 3, 42, 100, { seating: true });
+    game.start();
+    expect(game.customers[0]?.seat).toBe(0);
+    game.slots.K.item = { id: 'tomato', state: 'raw' };
+    game.assignStaff('K');
+    expect(game.staffTask?.chef).toBe(1);
+    game.switchChef();
+    expect(game.staffTask).toBeUndefined();
+    expect(game.staffStatus).toBe('Manual control');
+    game.switchChef();
+    game.assignStaff('K');
+    advance(game, 600);
+    expect(game.staffTask).toBeUndefined();
+    expect(game.slots.K.item?.state).toBe('prepped');
+  });
+
+  it('Q18 releases a seat and returns one plate after eight seconds', () => {
+    const game = new Shift(pack, 1, 42, 100, { seating: true });
+    game.start();
+    face(game, 'S');
+    game.chef.held = { id: 'plate', dirty: false, food: [
+      { id: 'bun', state: 'ready' }, { id: 'patty', state: 'perfect' },
+    ] };
+    game.interact();
+    expect(game.customers[0]?.eatingUntil).toBe(8 * hz);
+    advance(game, 8 * hz - 1);
+    expect(game.slots.W.item).toBeUndefined();
+    advance(game, 1);
+    expect(game.customers).toHaveLength(0);
+    expect(game.slots.W.item).toEqual({ id: 'plate', dirty: true, food: [] });
+  });
+
+  it('Q09 opens and settles each of seven configured days with the correct recipes', () => {
+    for (const day of pack.restaurant.days) {
+      const game = new Shift(pack, day.day, 42, 100, { seating: true });
+      game.start();
+      while (game.phase === 'service') {
+        const order = game.orders[0];
+        if (order) {
+          const recipe = pack.recipes.find(({ id }) => id === order.recipe)!;
+          face(game, 'S');
+          game.chef.held = { id: 'plate', dirty: false, food: recipe.requires.map((rule) => {
+            const [id, states] = rule.split(':');
+            return { id: id!, state: states!.split('|')[0]! };
+          }) };
+          game.interact();
+        }
+        advance(game, 120);
+      }
+      expect(game.day.day).toBe(day.day);
+      expect(game.served).toBeGreaterThanOrEqual(day.target);
+      expect(game.cash).toBeGreaterThan(100);
+    }
+  });
+});

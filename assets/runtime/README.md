@@ -1,6 +1,14 @@
-# Runtime assets
-No verified runtime assets supplied in v1.1. Planned paths in manifest are not existing files. Graybox assets allowed only M1 with explicit labeling. Final assets must pass ledger and visual gate. Keep concept and source out of deployed build. Source work can be kept in assets/source/; use Git LFS only if approved and needed.
+# Burger Town runtime assets
 
-## M1 original graybox
+The M2 kitchen, chefs, guest rig and food state meshes are original Blender work. The Ogg loops are original synthesis. No third-party media or concept PNGs are imported by Vite. The source scenes and original WAVs live in `assets/source/`. The runtime asset audit in `production/ASSET_LEDGER.csv` records file hashes and source ownership.
 
-The playable prototype generates its chef, kitchen and food geometry in [graybox.ts](../../src/rendering/graybox.ts). The original authored source uses Three.js geometric primitives with procedural material colors, props and carry poses. It uses no third-party game art, images, models, textures, fonts or audio files. The runtime code is bundled by Vite. The M1 asset ledger links the source and gameplay evidence. Concept imagery stays outside the shipped build.
+Run the authoring scripts from the repository root with Blender 4.3 and FFmpeg. Exports use meters, glTF Y-up, named attachment nodes and shared skeleton names.
+
+```sh
+blender -b --python-exit-code 1 --python tools/art/build_kitchen.py
+blender -b --python-exit-code 1 --python tools/art/build_food.py
+blender -b --python-exit-code 1 --python tools/art/build_chefs.py
+python tools/art/build_audio.py
+```
+
+Install `gltf-validator@2.0.0-dev.3.10` in a temporary directory and run `tools/art/validate_glbs.mjs` with `NODE_PATH` pointing to that directory's `node_modules`. See the M2 QA evidence for runtime verification and current art limitations.

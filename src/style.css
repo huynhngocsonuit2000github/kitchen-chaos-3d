@@ -66,3 +66,79 @@ button:focus-visible { outline: 3px solid #c94837; outline-offset: 3px; }
 }
 
 dialog .version { font-size: 11px; color: #53635c; }
+
+:root {
+  --panel: #34302a;
+  --line: #634d3d;
+  --muted: #dfc6ad;
+  background: #241d19;
+}
+.hud > section, .service-strip > section, .keys {
+  background: linear-gradient(145deg, #3f352c, #2e2621);
+  border-radius: 12px;
+}
+.stage {
+  background: radial-gradient(ellipse at 50% 41%, #a66c49, #694336 62%, #472e2a);
+}
+#tickets li {
+  padding: 6px 39px 7px 34px;
+  border-radius: 8px;
+  box-shadow: inset 0 -3px #dec7a4;
+}
+#tickets li:not(.no-tickets)::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 9px;
+  width: 18px;
+  height: 14px;
+  border-radius: 10px 10px 5px 5px;
+  background: linear-gradient(#e9a245 36%, #633b27 37% 59%, #9a6233 60% 69%, #e9a245 70%);
+}
+#tickets .ticket-name { font-size: 15px; }
+#tickets small, .patience { font-size: 12px; }
+.station-label {
+  background: #382b22ed;
+  border-radius: 6px;
+  font-size: clamp(9px, 1.35vh, 12px);
+  box-shadow: 0 2px 3px #382b2255;
+}
+.station-label.target { background: #ffe79b; }
+button { min-height: 40px; }
+#build-layout { display: grid; gap: 8px; margin-block: 14px; grid-template-columns: 1fr 1fr; }
+#build-layout label:first-child, #placement-cost { grid-column: 1 / -1; }
+#build-layout input { width: 56px; }
+#build-layout input, #build-layout select { padding: 6px; color-scheme: light; }
+button:disabled { cursor: default; opacity: .6; }
+.keys { align-items: center; }
+.keys button { min-height: 30px; margin-left: auto; padding-block: 3px; font-size: 12px; }
+dialog.planning {
+  margin-inline: auto 24px;
+  width: min(345px, 92vw);
+  max-height: calc(100dvh - 36px);
+}
+dialog.planning::backdrop { background: #20191445; }
+@media (max-width: 900px) { dialog.planning { margin-inline: auto; } }
+#settings { margin-block: 10px 14px; }
+#settings summary { cursor: pointer; font-weight: 700; }
+#settings label { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 6px; }
+#settings label:last-child { justify-content: flex-start; }
+@media (min-width: 960px) {
+  .game {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(320px, 1fr);
+  }
+  .stage, .service-strip, .keys { grid-area: 2 / 1; }
+  .service-strip, .keys {
+    position: relative;
+    z-index: 1;
+    margin: 0 12px 12px;
+    align-self: end;
+  }
+  .service-strip { grid-template-columns: 1fr; width: min(22%, 272px); }
+  .keys { width: min(21%, 248px); justify-self: end; gap: 5px 12px; }
+  .keys button { margin-left: 0; }
+  .service-strip h2 { font-size: 15px; }
+  .service-strip p { font-size: 13px; }
+  .compass { inset: 12px 14px auto auto; }
+}
