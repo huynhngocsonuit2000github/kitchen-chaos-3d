@@ -1,0 +1,66 @@
+
+added 142 packages in 3s
+
+> kitchen-chaos-3d@0.0.1 typecheck
+> tsc --noEmit
+
+
+> kitchen-chaos-3d@0.0.1 lint
+> eslint .
+
+
+> kitchen-chaos-3d@0.0.1 test
+> vitest run
+
+
+ RUN  v5.1.2 /workspace/kitchen-chaos-3d
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  13:03:44
+   Duration  212ms (import 52%, transform 34%, tests 11%, worker 3%)
+
+
+> kitchen-chaos-3d@0.0.1 build
+> vite build
+
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 106 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                           0.74 kB │ gzip:   0.41 kB
+dist/assets/EXAMPLE_PACK-DTskag1v.json    2.49 kB │ gzip:   0.48 kB
+dist/assets/index-AMXV4IDG.css            0.62 kB │ gzip:   0.37 kB
+dist/assets/index-DnhQV7bI.js             3.45 kB │ gzip:   1.66 kB
+dist/assets/pack-G0rULBN-.js             86.55 kB │ gzip:  24.80 kB
+dist/assets/probe-CX8vhDhn.js           525.06 kB │ gzip: 129.83 kB
+
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 217ms
+
+> kitchen-chaos-3d@0.0.1 test:e2e
+> playwright test
+
+[WebServer] (node:3839) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:3857) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium-1280x720] › tests/e2e/boot.spec.ts:3:1 › Q01 boots the production build with clean browser and asset requests (723ms)
+  ✓  2 [chromium-1280x720] › tests/e2e/boot.spec.ts:22:1 › Q01 recovers from a missing content asset through a keyboard retry (724ms)
+  ✓  3 [chromium-1280x720] › tests/e2e/boot.spec.ts:36:1 › Q01 explains how to recover when WebGL 2 is unavailable (584ms)
+(node:4083) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  4 [chromium-1920x1080] › tests/e2e/boot.spec.ts:3:1 › Q01 boots the production build with clean browser and asset requests (689ms)
+  ✓  5 [chromium-1920x1080] › tests/e2e/boot.spec.ts:22:1 › Q01 recovers from a missing content asset through a keyboard retry (723ms)
+  ✓  6 [chromium-1920x1080] › tests/e2e/boot.spec.ts:36:1 › Q01 explains how to recover when WebGL 2 is unavailable (541ms)
+
+  6 passed (6.4s)
