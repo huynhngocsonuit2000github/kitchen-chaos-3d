@@ -1,0 +1,2 @@
+# Concept art — v1.1
+Original AI-generated visual board supplied with this handoff, plus five crops of that same board. These are raster references, not meshes, sprites, textures, rigged characters, UI implementation or gameplay screenshots. See docs/VISUAL_TARGETS.md for authoritative corrections. Do not ship the board as game art. No third-party downloads included. Producer to approve target at G0; retain provenance in credits/asset ledger and review for unintended resemblance before public use.

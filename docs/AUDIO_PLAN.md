@@ -1,0 +1,5 @@
+# Audio plan
+Original or permissively licensed audio only. Slice cues: pickup/place, chopping loop, frying loop, ready ding, burn warning, wash loop, order arrival, patience warning, serve success, wrong action, cash, upgrade, UI click. Ambient kitchen + customers, one upbeat original/licensed music loop; urgency layer optional. Prioritize urgent cues over ambience; cap concurrent voices, fade loops when station stops, avoid stacking warning spam. Master/music/SFX sliders and mute persist; unlock WebAudio on user gesture, pause/resume on visibility change, graceful failure. No copyrighted soundtrack. Acceptance: all key actions audible, warnings distinguishable without audio via icons, no clipping/loop leaks, no autoplay errors. Sources and rights currently missing; manifest tracks each.
+
+## v1.1 production
+Use ASSET_PIPELINE.md and AUD manifest rows for original foley/synthesis and music loop production. Record actual source WAV, OGG exports, cue names, source/license provenance and loop/clipping review. No runtime audio exists yet.

@@ -1,0 +1,9 @@
+# Character bible
+## Playable pair
+Max (CHAR-01): 1.35m tall, round face, red/coral apron, tall ivory chef hat, dark trousers and rounded shoes; enthusiastic posture. Lina (CHAR-02): same height and rig, teal apron, short cap/headband silhouette, neat hair bun; focused and cheerful. Names and exact proportions are proposed defaults. Both have identical movement/cooking ability; roles are visual personality, not hard-coded buffs. Active chef has white-edged floor ring + arrow and name in HUD. Inactive chef shows task glyph, idle or blocked status. Color never sole cue.
+## Shared geometry and rig
+Head ~40% total height; broad hands and short limbs. One base body, 5–12k tris per chef, shared 1024 atlas or two small materials. Skeleton root/pelvis/spine/chest/neck/head, clavicles, upper/lower arms, hands, upper/lower legs, feet; optional face shapes blink/smile/panic. Named sockets hand_r, hand_l, carry_plate, headwear; attach via exported nodes and test world transforms. Root at feet; no root motion for navigation; animation follows simulation velocity. Skin weights normalized, no detached vertices. Keep .blend and export manifest separate.
+## Customers and staff
+CHAR-03 base compatible rig with lower detail; CHAR-04 6 visual variants via hair, skin, tops, body proportions (within rig limits), glasses/hat. No implied behavioral traits based on appearance. Customer states queue/walk/seat/eat/leave/angry. Staff later: waiter tray, cleaner cloth, manager clipboard. Slice uses two chefs and seated customers only; no extra controllable waiter required. Future VIP/critic behavior data-driven. Customer variants share materials and animation clips; target 12 visible animated characters total.
+## Review
+Front/side/back neutral pose, silhouette thumbnail at actual gameplay scale, hand socket alignment with plate and knife, walk/turn/carry/chop/wash/serve tests. Approve base rig before variants; no separate rigs per costume.

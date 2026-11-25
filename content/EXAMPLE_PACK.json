@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "burger-town-draft-1",
+  "ingredients": [
+    {
+      "id": "bun",
+      "states": [
+        "ready"
+      ],
+      "cost": 1
+    },
+    {
+      "id": "patty",
+      "states": [
+        "raw",
+        "cooking",
+        "perfect",
+        "overcooked",
+        "burnt"
+      ],
+      "cost": 1
+    },
+    {
+      "id": "cheese",
+      "states": [
+        "ready"
+      ],
+      "cost": 1
+    },
+    {
+      "id": "lettuce",
+      "states": [
+        "raw",
+        "prepped"
+      ],
+      "cost": 1
+    },
+    {
+      "id": "tomato",
+      "states": [
+        "raw",
+        "prepped"
+      ],
+      "cost": 1
+    }
+  ],
+  "recipes": [
+    {
+      "id": "classic",
+      "requires": [
+        "bun:ready",
+        "patty:perfect|overcooked"
+      ],
+      "price": 12
+    },
+    {
+      "id": "cheese",
+      "requires": [
+        "bun:ready",
+        "patty:perfect|overcooked",
+        "cheese:ready"
+      ],
+      "price": 15
+    },
+    {
+      "id": "garden",
+      "requires": [
+        "bun:ready",
+        "patty:perfect|overcooked",
+        "lettuce:prepped",
+        "tomato:prepped"
+      ],
+      "price": 17
+    }
+  ],
+  "restaurant": {
+    "id": "burger-town",
+    "shiftSeconds": 300,
+    "startCash": 100,
+    "plates": 4,
+    "tables": 2,
+    "days": [
+      {
+        "day": 1,
+        "target": 6,
+        "recipes": [
+          "classic"
+        ]
+      },
+      {
+        "day": 2,
+        "target": 8,
+        "recipes": [
+          "classic",
+          "cheese"
+        ]
+      },
+      {
+        "day": 3,
+        "target": 10,
+        "recipes": [
+          "classic",
+          "cheese",
+          "garden"
+        ]
+      },
+      {
+        "day": 4,
+        "target": 10,
+        "recipes": [
+          "classic",
+          "cheese",
+          "garden"
+        ]
+      },
+      {
+        "day": 5,
+        "target": 10,
+        "recipes": [
+          "classic",
+          "cheese",
+          "garden"
+        ]
+      },
+      {
+        "day": 6,
+        "target": 10,
+        "recipes": [
+          "classic",
+          "cheese",
+          "garden"
+        ]
+      },
+      {
+        "day": 7,
+        "target": 10,
+        "recipes": [
+          "classic",
+          "cheese",
+          "garden"
+        ]
+      }
+    ]
+  },
+  "upgrades": [
+    {
+      "id": "second-board",
+      "cost": 35
+    },
+    {
+      "id": "second-stove",
+      "cost": 60
+    },
+    {
+      "id": "plate-rack",
+      "cost": 25
+    }
+  ]
+}

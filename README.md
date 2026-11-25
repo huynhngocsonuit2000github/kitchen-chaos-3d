@@ -1,2 +1,2 @@
-# kitchen-chaos-3d
-kitchen-chaos-3d
+# Kitchen Chaos 3D — Production Pack v1.1
+Original premium stylized 3D web cooking arcade + restaurant management. Design handoff, not a playable build. Start with AGENTS.md and CODEX_PROMPT.md; see HANDOFF.md. GDD is canonical mechanics; visual target board is in assets/concept. Runtime assets missing. M0 batch first, then G0 review. M1 preview may be published after explicit approval. No paid services or online co-op by default.
