@@ -1,3 +1,4 @@
+import { ingredientIcon, orderIcon } from './food-icons';
 import { createKitchen } from '../rendering/kitchen';
 import { createAudio } from './audio';
 import { loadCareer, saveCareer } from './career';
@@ -273,8 +274,10 @@ export async function mountGame(pack: Pack) {
     const tickets = shift.orders.slice(0, expanded ? undefined : 3).map(({ recipe, deadline, id }) => {
       const seconds = tutorial ? 60 : Math.ceil((deadline - shift.tick) / hz);
       const { requires } = pack.recipes.find((item) => item.id === recipe)!;
-      const names = requires.map((rule) => rule.split(':')[0]).join(' · ');
-      return `<li class="${seconds <= 15 ? 'urgent' : ''}"><span class="ticket-name">${capitalize(recipe)} <small>#${id}</small></span><small>${names}</small><span class="patience">${tutorial ? 'Practice' : `${seconds}s`}</span></li>`;
+      const ingredients = requires.map((rule) => rule.split(':')[0]!);
+      const names = ingredients.join(' · ');
+      const icons = ingredients.map(ingredientIcon).join('');
+      return `<li class="${seconds <= 15 ? 'urgent' : ''}">${orderIcon(recipe)}<span class="ticket-name">${capitalize(recipe)} <small>#${id}</small></span><span class="ticket-ingredients"><span class="sr-only">${names}</span>${icons}</span><span class="patience">${tutorial ? 'Practice' : `${seconds}s`}</span><span class="ticket-meter" aria-hidden="true" style="--time:${Math.min(100, Math.max(0, seconds * 100 / 60))}%"></span></li>`;
     }).join('');
     const ticketHtml = tickets || '<li class="no-tickets">No pending tickets</li>';
     if (ticketHtml !== lastTickets) {

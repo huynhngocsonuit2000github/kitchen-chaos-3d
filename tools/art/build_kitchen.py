@@ -105,6 +105,18 @@ def make(tile):
         for y in (.03,.087):
             lathe(root, 'Handle rivet', steel, (0,y,.043), .013,.012)
         return root
+    if tile == 'DinerWindow':
+        panel(root, 'Cream outer frame', cream, (0,0,.46), (1.82,.22,.92), .044)
+        panel(root, 'Burnished dark inset', dark_teal, (0,-.124,.46), (1.57,.053,.72), .032)
+        for x in (-.38,.38):
+            panel(root, 'Frosted window pane', glass, (x,-.161,.45), (.66,.036,.59), .015)
+            panel(root, 'Window crossbar', wood, (x,-.185,.51), (.68,.037,.054), .008)
+        panel(root, 'Maple ledge', wood, (0,-.13,.035), (1.92,.42,.095), .028)
+        for i in range(7):
+            stripe = panel(root, 'Striped canvas valance', coral if i % 2 == 0 else cream,
+                           ((i-3)*.254,-.225,.925), (.251,.39,.065), .016)
+            stripe.rotation_euler.x = .20
+        return root
     if tile == 'Sign':
         panel(root, 'Enamel sign', wine, (0,0,.37), (1.65,.13,.70), .099)
         panel(root, 'Raised gold edge', gold, (0,-.078,.37), (1.54,.035,.60), .085)
@@ -225,7 +237,7 @@ def export(root, tile):
     bpy.ops.export_scene.gltf(filepath=str(output), use_selection=True, export_animations=False,
                               export_cameras=False, export_lights=False)
 
-for tile in (*'BPMCLGKSWARXT', 'Wall', 'Seat', 'Tile', 'Trim', 'Plinth', 'Knife', 'Sign'):
+for tile in (*'BPMCLGKSWARXT', 'Wall', 'Seat', 'Tile', 'Trim', 'Plinth', 'Knife', 'Sign', 'DinerWindow'):
     root = make(tile)
     export(root, tile)
 source = ROOT / 'assets/source/burger-town-kitchen.blend'
