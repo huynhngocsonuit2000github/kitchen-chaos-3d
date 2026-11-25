@@ -13,10 +13,13 @@ test('Q01 boots the production build with clean browser and asset requests', asy
 
   await page.goto('./');
   await expect(page.getByRole('heading', { name: 'Kitchen Chaos 3D' })).toBeVisible();
-  await expect(page.getByRole('status')).toHaveText('Kitchen foundation ready.');
+  await expect(page.getByRole('button', { name: 'Start shift' })).toBeVisible();
   await expect(page.locator('#build')).toContainText('Content schema 1');
+  await page.screenshot({ path: testInfo.outputPath('prototype-boot.png') });
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#tickets')).toContainText('Classic');
+  await expect(page.locator('#clock')).not.toHaveText('5:00');
   expect(errors).toEqual([]);
-  await page.screenshot({ path: testInfo.outputPath('foundation-boot.png') });
 });
 
 test('Q01 recovers from a missing content asset through a keyboard retry', async ({ page }, testInfo) => {
@@ -28,8 +31,8 @@ test('Q01 recovers from a missing content asset through a keyboard retry', async
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Retry' })).toBeFocused();
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('status')).toHaveText('Kitchen foundation ready.');
-  await expect(page.getByRole('status')).toBeFocused();
+  await expect(page.getByRole('button', { name: 'Start shift' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Start shift' })).toBeFocused();
   await expect(page.getByRole('alert')).toBeHidden();
 });
 
