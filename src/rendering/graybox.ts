@@ -81,7 +81,7 @@ function chefModel(index: number) {
 export function createKitchen(stage: HTMLElement, labels: HTMLElement) {
   let renderer: T.WebGLRenderer;
   try {
-    renderer = new T.WebGLRenderer({ antialias: true });
+    renderer = new T.WebGLRenderer({ antialias: true, alpha: true });
   } catch {
     throw new Error('WebGL 2 is required. Enable hardware acceleration or try a supported desktop browser.');
   }
@@ -91,8 +91,8 @@ export function createKitchen(stage: HTMLElement, labels: HTMLElement) {
   const camera = new T.OrthographicCamera();
   camera.position.set(14, 18, 13);
   camera.lookAt(5.5, .15, 4.5);
-  scene.add(new T.HemisphereLight('#fff5dd', '#838995', 2.35));
-  const light = new T.DirectionalLight('#fff0d5', 2);
+  scene.add(new T.HemisphereLight('#fff5dd', '#838995', 1.8));
+  const light = new T.DirectionalLight('#fff0d5', 1.55);
   light.position.set(-4, 9, 5);
   scene.add(light);
   shape(scene, box, '#244849', 5.5, -.31, 4.5, 12, .54, 10);
@@ -186,7 +186,7 @@ export function createKitchen(stage: HTMLElement, labels: HTMLElement) {
     if (resized) {
       width = stage.clientWidth;
       height = stage.clientHeight;
-      const view = Math.max(13.1, 17 / (width / height));
+      const view = Math.max(14.4, 17 / (width / height));
       camera.left = -view * width / height / 2;
       camera.right = -camera.left;
       camera.top = view / 2;
