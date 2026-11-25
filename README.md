@@ -1,10 +1,36 @@
-# Kitchen Chaos 3D — Production Pack v1.1
-Original premium stylized 3D web cooking arcade + restaurant management. This repository contains the v1.1 design handoff and the M0 browser foundation. Start with AGENTS.md and CODEX_PROMPT.md; see HANDOFF.md. GDD is canonical mechanics; visual target board is in assets/concept. Runtime assets missing. M0 is ready for G0 review. M1 preview may be published after explicit approval. No paid services or online co-op by default.
+# Kitchen Chaos 3D
 
-## Run the M0 foundation
+Run a five-minute Burger Town shift in the M1 graybox preview. Switch between Max and Lina, cook three burgers, and try to serve ten orders before closing.
 
-Use Node 24.22.3 (see `.nvmrc`) and npm. Run `npm ci`, then `npm run dev` and open the URL Vite prints. The foundation validates the Burger Town content fixture and checks that the browser can initialize Three.js with WebGL 2.
+## Play locally
 
-Run `npm run typecheck`, `npm run lint`, `npm test` and `npm run build`. Install the test browser with `npx playwright install chromium` (add `--with-deps` on CI), then run `npm run test:e2e` against the built output. You can set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to use an installed Chromium. To verify the project subpath, run both the build and browser tests with `VITE_BASE_PATH=/kitchen-chaos-3d/`. Results are written to `playwright-report/` and `test-results/`.
+Use Node 24.22.3 from `.nvmrc`. Run `npm ci`, then `npm run dev`, and open the URL Vite prints. Use desktop Chromium with WebGL 2.
 
-See [production progress](production/PROGRESS.md) and the [QA report](reports/QA_REPORT.md) for M0 evidence and G0 review.
+| Input | Action |
+|---|---|
+| WASD | Move and face a station |
+| Shift | Dash |
+| E | Pick up, place, assemble or serve at the highlighted station |
+| Space | Hold to chop or wash. Press at the waste bin to discard food |
+| Q | Switch chef |
+| Tab | Expand tickets during service |
+| Esc | Pause or resume |
+
+Take a clean plate from the rack and place it at assembly. Add a bun and a patty cooked for 8–12 seconds. Cheese burgers add cheese. Garden burgers add chopped lettuce and tomato. Take the finished plate to the serving hatch. Used plates return to the sink.
+
+## Verify the build
+
+```sh
+npm ci
+npm run typecheck
+npm run lint
+npm test
+export VITE_BASE_PATH=/kitchen-chaos-3d/
+npm run build
+npx playwright install chromium
+npm run test:e2e -- --workers=1
+```
+
+Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to use an installed Chromium. The project base must match for build and browser verification. CI retains the test evidence and `dist/` artifact.
+
+See [production progress](production/PROGRESS.md), the [QA report](reports/QA_REPORT.md), and the [Pages preparation checklist](docs/LIVE_PREVIEW.md#m1-pages-candidate).

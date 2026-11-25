@@ -20,3 +20,7 @@ All tests NOT_RUN until real execution. Unit (U), browser/integration (B), human
 | Content M3/M4 | Add valid pack / invalid reference / unlock cycle → valid pack loads; invalid rejected with precise errors | Q19 U/B |
 | Modes M3 | Challenge fixed seed and goal, endless threshold, isolated mode save → no career currency leakage | Q22 U/B |
 | Release M5 | Authorized deploy and rollback → version visible, URL smoke, save compatibility checked | Q14/Q21 D |
+
+## M1 verification
+
+The simulation tests exercise collision and station reachability, transfers, exact stove thresholds, oldest-order matching, reduced overcook tips, retained invalid plates, interrupted work, discarded food and once-only settlement. The Chromium shift uses keyboard controls to cook and serve Classic, Cheese and Garden, wash and reuse a plate, pause on blur, reach the loss results and retry. See [QA evidence](../reports/evidence/5d81842/README.md) for the completed run and test coverage limits.

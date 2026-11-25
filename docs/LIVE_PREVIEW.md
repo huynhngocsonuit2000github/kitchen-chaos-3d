@@ -6,3 +6,11 @@ Embed build version, commit SHA, content/save schema version and PREVIEW label i
 
 ## Feedback loop
 Producer plays URL → opens GitHub issue using template (version/URL/browser, steps, expected/actual, screenshot/video, severity, acceptance test) → triage P0 blocker/P1 major/P2 minor/P3 polish → Codex reproduces with seed/save fixture → fixes scoped branch, adds regression, CI, PR → Producer reviews → authorized deployment → retest issue and close only with evidence. Design requests update GDD/decision log first. Maintain release notes and open defects; protect working features. No automatic publication without permission.
+
+## M1 Pages candidate
+
+- Build and run Playwright with `VITE_BASE_PATH=/kitchen-chaos-3d/`. Set `VITE_BUILD_SHA` to the full reviewed commit SHA. The version footer and menu/results show the embedded build identity. The PR CI artifact is `dist-<sha>`.
+- Confirm the original graybox asset ledger and record separate Producer authorization for the reviewed SHA and public Pages audience. Use the standard project subpath for this repository. A custom domain would require a root-base rebuild and smoke.
+- After authorization, enable GitHub Actions as the Pages source and activate [the prepared dispatch workflow](../templates/github-actions/pages.yml). Protect the `github-pages` environment where supported. Dispatch from main with the reviewed full SHA and approval reference. Use a commit reachable from main.
+- Record the deployment URL and workflow run. After the workflow confirms the deployed build identity, verify the deployed URL in Chromium. Confirm healthy JS, CSS and JSON responses and no console errors, start a shift, deliver a Classic burger, pause and restart.
+- Roll back by dispatching with the previous approved, reachable SHA and its approval reference, then repeat the hosted browser smoke. M1 has in-memory sessions. Refreshing the page returns to a fresh shift.
