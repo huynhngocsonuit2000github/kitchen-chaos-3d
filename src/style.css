@@ -85,16 +85,13 @@ dialog .version { font-size: 11px; color: #53635c; }
   border-radius: 8px;
   box-shadow: inset 0 -3px #dec7a4;
 }
-#tickets li:not(.no-tickets)::before {
-  content: '';
-  position: absolute;
-  left: 8px;
-  top: 9px;
-  width: 18px;
-  height: 14px;
-  border-radius: 10px 10px 5px 5px;
-  background: linear-gradient(#e9a245 36%, #633b27 37% 59%, #9a6233 60% 69%, #e9a245 70%);
-}
+#tickets li:not(.no-tickets) { min-width: 148px; padding: 6px 34px 9px 39px; overflow: hidden; }
+.order-icon { position: absolute; left: 6px; top: 7px; width: 28px; height: 28px; }
+.ticket-ingredients { display: flex; align-items: center; gap: 2px; }
+.ingredient-icon { width: 17px; height: 17px; }
+.ticket-meter { position: absolute; inset: auto 0 0; height: 3px; background: #e6cead; }
+.ticket-meter::before { content: ''; display: block; width: var(--time); height: 100%; background: #2e8063; }
+.urgent .ticket-meter::before { background: #b53b31; }
 #tickets .ticket-name { font-size: 15px; }
 #tickets small, .patience { font-size: 12px; }
 .station-label {
@@ -142,3 +139,25 @@ dialog.planning::backdrop { background: #20191445; }
   .service-strip p { font-size: 13px; }
   .compass { inset: 12px 14px auto auto; }
 }
+.stage canvas { inset-inline: 50% auto; transform: translateX(-50%); }
+.station-food {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, -108%);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border: 1px solid #c58b50;
+  border-radius: 6px;
+  background: #fff0d4;
+  color: #35251d;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 800;
+}
+.station-food .ingredient-icon, .station-food .order-icon { position: static; width: 13px; height: 13px; }
+.station-food[data-state="perfect"] { background: #dcf0c9; border-color: #61924d; }
+.station-food[data-state="overcooked"], .station-food[data-state="burnt"] { background: #ffcab1; border-color: #b54334; }
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

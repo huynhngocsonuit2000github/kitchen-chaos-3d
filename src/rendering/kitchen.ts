@@ -1,7 +1,8 @@
 import * as T from 'three';
 import { clone as cloneRig } from 'three/addons/utils/SkeletonUtils.js';
-import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { ingredientIcon } from '../game/food-icons';
+import { bakeProp, batchCharacter } from './bake';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { cells, stations, stationNames } from '../game/layout';
 import type { Placement, StationId } from '../game/layout';
@@ -57,36 +58,6 @@ function foodModel(root: T.Group, item: Item, food: Map<string, T.Group>, y = 0)
   }
 }
 
-function batchModel(scene: T.Group, mergeNamedMaterials = false) {
-  scene.updateMatrixWorld(true);
-  const batches = new Map<T.Material, T.BufferGeometry[]>();
-  const meshes: T.Mesh[] = [];
-  const named = new Map<string, T.Material>();
-  scene.traverse((object) => {
-    if (!(object instanceof T.Mesh) || Array.isArray(object.material)) return;
-    let material = object.material as T.Material;
-    if (mergeNamedMaterials && material.name) {
-      const shared = named.get(material.name);
-      if (shared) material = shared;
-      else named.set(material.name, material);
-    }
-    const geometry = object.geometry.clone().applyMatrix4(object.matrixWorld);
-    geometry.deleteAttribute('uv');
-    const batch = batches.get(material) ?? [];
-    batch.push(geometry);
-    batches.set(material, batch);
-    meshes.push(object);
-  });
-  for (const mesh of meshes) mesh.removeFromParent();
-  for (const [material, geometries] of batches) {
-    const merged = mergeGeometries(geometries);
-    for (const geometry of geometries) geometry.dispose();
-    if (!merged) throw new Error('Could not batch Burger Town asset geometry.');
-    scene.add(new T.Mesh(merged, material));
-  }
-  return scene;
-}
-
 function chefModel(body: T.Group, clips: T.AnimationClip[], knife: T.Group) {
   const group = new T.Group();
   group.add(body);
@@ -124,14 +95,14 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
     Promise.all(['max', 'lina', 'guest'].map((name) => loader.loadAsync(characterUrls[`../../assets/runtime/characters/${name}.glb`]!))),
     Promise.all(Object.entries(modelUrls).map(async ([path, url]) => {
       const key = path.split('/').at(-1)!.slice(0, -4);
-      return { key, path, model: batchModel((await loader.loadAsync(url)).scene) };
+      return { key, path, model: (await loader.loadAsync(url)).scene };
     })),
   ]);
   const appliances = new Map(models.filter(({ path }) => path.includes('/kit/')).map(({ key, model }) => [key, model]));
   const food = new Map(models.filter(({ path }) => path.includes('/food/')).map(({ key, model }) => [key, model]));
   let renderer: T.WebGLRenderer;
   try {
-    renderer = new T.WebGLRenderer({ antialias: true, alpha: true });
+    renderer = new T.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'high-performance' });
   } catch {
     throw new Error('WebGL 2 is required. Enable hardware acceleration or try a supported desktop browser.');
   }
@@ -179,13 +150,18 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
 
   const plinth = appliances.get('Plinth')!.clone();
   plinth.position.set(5.5, 0, 4.5);
+  bakeProp(plinth);
   scene.add(plinth);
   const sign = appliances.get('Sign')!.clone();
   sign.position.set(0, .91, 2.0);
   sign.rotation.y = Math.PI / 2;
+  bakeProp(sign);
   scene.add(sign);
   const fixedProps = new T.Group();
   scene.add(fixedProps);
+  const dinerWindow = appliances.get('DinerWindow')!.clone();
+  dinerWindow.position.set(9.6, .73, .02);
+  fixedProps.add(dinerWindow);
   const bins = new Set<StationId>(['B', 'P', 'M', 'C', 'L']);
   const plateSlots = new Map((Object.keys(stationNames) as StationId[]).map((tile) => {
     const root = new T.Group();
@@ -198,15 +174,24 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
       model.position.set(station.x, 0, station.z);
       fixedProps.add(model);
       object.add(root);
-    } else object.add(model, root);
+    } else {
+      bakeProp(model);
+      object.add(model, root);
+    }
     scene.add(object);
-    contactShadow(object, 0, 0);
     const label = document.createElement('span');
     label.className = 'station-label';
     label.textContent = stationNames[tile];
-    labels.append(label);
-    return [tile, { root, label, object, x: 0, z: 0 }];
+    const detail = document.createElement('span');
+    detail.className = 'station-food';
+    labels.append(label, detail);
+    return [tile, { root, label, detail, detailKey: '', object, x: 0, z: 0 }];
   }));
+  const stationShadows = new T.InstancedMesh(shadowPlane, shade, plateSlots.size);
+  stationShadows.frustumCulled = false;
+  scene.add(stationShadows);
+  const shadowTransform = new T.Matrix4();
+  let shadowLayout: Shift['stations'] | undefined;
   const modules = new Map<string, { x: number; z: number; yaw: number; color?: string }[]>([
     ['Tile', []], ['Wall', []], ['Trim', []],
   ]);
@@ -234,11 +219,12 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
     }
   }
   for (const [name, placements] of modules) {
-    for (const child of appliances.get(name)!.children) {
+    const module = appliances.get(name)!;
+    bakeProp(module);
+    for (const child of module.children) {
       if (!(child instanceof T.Mesh)) continue;
-      const material = child.material as T.MeshStandardMaterial;
+      const material = child.material as T.MeshStandardMaterial | T.MeshBasicMaterial;
       const surface = material.clone();
-      if (name !== 'Wall') surface.color.set('white');
       const instances = new T.InstancedMesh(child.geometry, surface, placements.length);
       const locator = new T.Object3D();
       placements.forEach(({ x, z, yaw, color }, index) => {
@@ -269,7 +255,8 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
       fixedProps.add(display);
     }
   }
-  batchModel(fixedProps, true);
+  bakeProp(fixedProps);
+  for (const model of food.values()) bakeProp(model);
   const batches = new Map<string, T.Mesh[]>();
   for (const child of scene.children) {
     if (!(child instanceof T.Mesh)) continue;
@@ -290,6 +277,18 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
     scene.add(instances);
   }
 
+  for (const { scene: character } of characters) batchCharacter(character);
+  const characterMaterials = new Map<T.Material, T.MeshLambertMaterial>();
+  for (const { scene: character } of characters) character.traverse((node) => {
+    if (!(node instanceof T.Mesh) || !(node.material instanceof T.MeshStandardMaterial)) return;
+    const original = node.material;
+    let surface = characterMaterials.get(original);
+    if (!surface) {
+      surface = new T.MeshLambertMaterial({ color: original.color, name: original.name });
+      characterMaterials.set(original, surface);
+    }
+    node.material = surface;
+  });
   const actors = characters.slice(0, 2).map(({ scene, animations }) => chefModel(scene, animations, appliances.get('Knife')!.clone()));
   const guestSource = characters[2]!;
   const outfits = ['#ac5e65', '#647f9e', '#597955', '#9873ab', '#c08951', '#396e72'];
@@ -298,7 +297,7 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
     const mixer = new T.AnimationMixer(model);
     model.traverse((node) => {
       if (!(node instanceof T.Mesh) || node.material.name !== 'Guest apron') return;
-      const material = (node.material as T.MeshStandardMaterial).clone();
+      const material = (node.material as T.MeshLambertMaterial).clone();
       material.color.set(color);
       node.material = material;
     });
@@ -307,7 +306,7 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
     scene.add(model);
     const idle = guestSource.animations.find(({ name }) => name === 'idle');
     if (idle) mixer.clipAction(idle).play();
-    return { model, mixer, action: undefined as T.AnimationAction | undefined, clip: '' };
+    return { model, mixer, action: undefined as T.AnimationAction | undefined, clip: '', id: -1 };
   });
   const effectGeometry = new T.SphereGeometry(.055, 7, 5);
   const effects = Array.from({ length: 9 }, (_, index) => {
@@ -334,11 +333,13 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
   const anchor = new T.Vector3();
   let width = 0;
   let height = 0;
+  let canvasWidth = 0;
   let low = false;
   let lastScene = '';
   let lastTick = 0;
   let lastShift: Shift | undefined;
   let lastServed = 0;
+  let transitioningGuest = false;
   let sparkleUntil = -1;
   const benchmark = new URLSearchParams(location.search).has('render-stats');
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -349,14 +350,15 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
     if (resized) {
       width = stage.clientWidth;
       height = stage.clientHeight;
-      const view = Math.max(14.4, 17 / (width / height));
-      camera.left = -view * width / height / 2;
+      canvasWidth = Math.min(width, Math.ceil(height * 1.32));
+      const view = Math.max(14.4, 17 / (canvasWidth / height));
+      camera.left = -view * canvasWidth / height / 2;
       camera.right = -camera.left;
       camera.top = view / 2;
       camera.bottom = -camera.top;
       camera.updateProjectionMatrix();
-      renderer.setPixelRatio(low ? .7 : Math.min(devicePixelRatio, 1.5));
-      renderer.setSize(width, height);
+      renderer.setPixelRatio(low ? .55 : Math.min(devicePixelRatio, 1));
+      renderer.setSize(canvasWidth, height);
     }
     const target = shift.target;
     const key = JSON.stringify([preview, shift.tick < shift.chef.dashUntil, sparkleUntil >= shift.tick, shift.stations, shift.active, target, shift.phase, shift.customers, shift.working, shift.served,
@@ -369,9 +371,15 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
       lastServed = shift.served;
       sparkleUntil = shift.tick + Math.round(hz * .65);
     }
+    if (lastShift !== shift) {
+      for (const guest of guests) {
+        guest.model.visible = false;
+        guest.id = -1;
+      }
+    }
     const delta = lastShift === shift ? Math.max(0, shift.tick - lastTick) / hz : 0;
     const dashing = shift.tick < shift.chef.dashUntil;
-    const needsMotion = dashing || sparkleUntil >= shift.tick || shift.working || shift.staffTask || Boolean(shift.slots.G.item || shift.slots.G2.item) ||
+    const needsMotion = transitioningGuest || shift.customers.some(({ eatingUntil }) => eatingUntil !== undefined) || dashing || sparkleUntil >= shift.tick || shift.working || shift.staffTask || Boolean(shift.slots.G.item || shift.slots.G2.item) ||
       actors.some((actor) => actor.gestureUntil > shift.tick);
     if (lastShift === shift && !resized && key === lastScene && (!needsMotion || delta < 1 / 20)) return;
     lastTick = shift.tick;
@@ -382,18 +390,43 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
       ghost.position.set(preview.position.x, .035, preview.position.z);
       (ghost.material as T.MeshLambertMaterial).color.set(preview.valid ? '#eece70' : '#cf4333');
     }
+    if (shadowLayout !== shift.stations) {
+      shadowLayout = shift.stations;
+      stationShadows.count = shadowLayout.length;
+      shadowLayout.forEach(({ x, z }, i) => {
+        stationShadows.setMatrixAt(i, shadowTransform.makeTranslation(x, .008, z));
+      });
+      stationShadows.instanceMatrix.needsUpdate = true;
+    }
     for (const [tile, slot] of plateSlots) {
       const station = shift.stations.find((placement) => placement.tile === tile);
       slot.object.visible = Boolean(station);
-      slot.label.hidden = !station;
+      const item = station ? shift.slots[tile].item : undefined;
+      slot.label.hidden = !station || Boolean(item);
+      slot.detail.hidden = !item;
       if (!station) continue;
       const { x, z } = station;
       slot.x = x;
       slot.z = z;
       slot.object.position.set(x, 0, z);
-      showItem(slot.root, shift.slots[tile].item);
+      showItem(slot.root, item);
+      if (item) {
+        const state = isPlate(item) ? item.dirty ? 'Dirty plate' : item.food.length ? 'Plated' : 'Clean plate' :
+          item.id === 'patty' ? item.state : item.state === 'prepped' ? 'Chopped' : item.id;
+        const text = state[0]!.toUpperCase() + state.slice(1);
+        const detailKey = JSON.stringify(item);
+        if (slot.detailKey !== detailKey) {
+          slot.detailKey = detailKey;
+          slot.detail.dataset.state = state;
+          const icons = isPlate(item) ? item.food.map(({ id }) => ingredientIcon(id)).join('') : ingredientIcon(item.id);
+          slot.detail.innerHTML = icons + stationNames[tile] + ' · ' + text;
+        }
+        anchor.set(x, 1.28, z).project(camera);
+        slot.detail.style.left = `${(anchor.x * canvasWidth + width) / 2}px`;
+        slot.detail.style.top = `${(1 - anchor.y) * height / 2}px`;
+      }
       anchor.set(x, 1.10, z).project(camera);
-      slot.label.style.left = `${(anchor.x + 1) * width / 2}px`;
+      slot.label.style.left = `${(anchor.x * canvasWidth + width) / 2}px`;
       slot.label.style.top = `${(1 - anchor.y) * height / 2}px`;
       slot.label.classList.toggle('target', target === tile);
     }
@@ -403,7 +436,10 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
     actors.forEach((actor, i) => {
       const chef = shift.chefs[i]!;
       actor.group.position.set(chef.x, 0, chef.z);
-      actor.body.rotation.y = Math.atan2(chef.facing.x, chef.facing.z);
+      const facing = Math.atan2(chef.facing.x, chef.facing.z);
+      const turn = facing - actor.body.rotation.y;
+      actor.body.rotation.y += Math.atan2(Math.sin(turn), Math.cos(turn)) *
+        (reduceMotion.matches || !delta ? 1 : Math.min(1, delta * 24));
       const moved = actor.x !== chef.x || actor.z !== chef.z;
       const held = JSON.stringify(chef.held) ?? '';
       if (actor.held !== held && shift.phase === 'service') {
@@ -427,25 +463,29 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
           actor.action.clampWhenFinished = true;
         }
       }
+      if (actor.action) actor.action.paused = clip === 'carry_walk' && !moved;
       actor.mixer.update(reduceMotion.matches ? 0 : Math.min(.12, delta));
       actor.x = chef.x;
       actor.z = chef.z;
       actor.ring.visible = shift.active === i;
       showItem(actor.carry, chef.held);
     });
-    for (const guest of guests) guest.model.visible = false;
-    let waiting = 0;
-    for (const customer of shift.customers) {
-      const guest = guests[(customer.id - 1) % guests.length]!;
-      guest.model.visible = true;
-      if (customer.seat === undefined) {
-        guest.model.position.set(10, 0, 8 - waiting++ * .72);
-        guest.model.rotation.y = Math.PI;
+    transitioningGuest = false;
+    const present = new Set(shift.customers.map(({ id }) => id));
+    const entrance = new T.Vector3(10, 0, 8);
+    const destination = new T.Vector3();
+    function follow(guest: typeof guests[number], yaw: number, rest: string) {
+      const distance = guest.model.position.distanceTo(destination);
+      const walking = shift.phase === 'service' && !reduceMotion.matches && distance > .07;
+      if (walking) {
+        transitioningGuest = true;
+        guest.model.rotation.y = Math.atan2(destination.x - guest.model.position.x, destination.z - guest.model.position.z);
+        guest.model.position.lerp(destination, Math.min(1, delta * 3.8 / distance));
       } else {
-        guest.model.position.set(10.06, .19, customer.seat === 0 ? 2 : 5);
-        guest.model.rotation.y = -Math.PI / 2;
+        guest.model.position.copy(destination);
+        guest.model.rotation.y = yaw;
       }
-      const clip = customer.eatingUntil !== undefined ? 'eat' : customer.seat !== undefined ? 'seat' : 'idle';
+      const clip = walking ? 'walk' : rest;
       if (guest.clip !== clip) {
         const animation = guestSource.animations.find(({ name }) => name === clip);
         if (animation) {
@@ -455,7 +495,24 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
         guest.clip = clip;
       }
       guest.mixer.update(reduceMotion.matches ? 0 : Math.min(.1, delta));
-
+      return walking;
+    }
+    let waiting = 0;
+    for (const customer of shift.customers) {
+      const guest = guests.find(({ id }) => id === customer.id) ?? guests.find(({ id }) => !present.has(id));
+      if (!guest) continue;
+      if (!guest.model.visible || guest.id !== customer.id) guest.model.position.copy(entrance);
+      guest.id = customer.id;
+      guest.model.visible = true;
+      if (customer.seat === undefined) destination.set(10, 0, 8 - waiting++ * .72);
+      else destination.set(10.06, .19, customer.seat === 0 ? 2 : 5);
+      follow(guest, customer.seat === undefined ? Math.PI : -Math.PI / 2,
+        customer.eatingUntil !== undefined ? 'eat' : customer.seat !== undefined ? 'seat' : 'idle');
+    }
+    for (const guest of guests) {
+      if (!guest.model.visible || present.has(guest.id)) continue;
+      destination.copy(entrance);
+      guest.model.visible = follow(guest, Math.PI, 'idle');
     }
     const spark = sparkleUntil >= shift.tick;
     const stoveTile = shift.slots.G.item ? 'G' : 'G2';
