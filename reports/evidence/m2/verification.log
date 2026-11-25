@@ -1,0 +1,138 @@
+
+added 142 packages in 5s
+
+> kitchen-chaos-3d@0.1.0-preview.1 typecheck
+> tsc --noEmit
+
+npm notice
+npm notice New major version of npm available! 11.19.1 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice
+
+> kitchen-chaos-3d@0.1.0-preview.1 lint
+> eslint .
+
+npm notice
+npm notice New major version of npm available! 11.19.1 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice
+
+> kitchen-chaos-3d@0.1.0-preview.1 test
+> vitest run
+
+
+ RUN  v5.1.2 /workspace/kitchen-chaos-3d
+
+
+ Test Files  2 passed (2)
+      Tests  16 passed (16)
+   Start at  14:16:23
+   Duration  817ms (transform 43%, import 31%, tests 24%, worker 2%)
+
+npm notice
+npm notice New major version of npm available! 11.19.1 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice
+
+> kitchen-chaos-3d@0.1.0-preview.1 build
+> vite build
+
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 154 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                             0.74 kB │ gzip:   0.41 kB
+dist/assets/cheese-yzyZG90p.glb             1.59 kB
+dist/assets/Plinth-EfY7wr7f.glb             2.10 kB
+dist/assets/Trim-BNFzST25.glb               2.15 kB
+dist/assets/Tile-B6HPbEmW.glb               2.16 kB
+dist/assets/EXAMPLE_PACK-DTskag1v.json      2.49 kB │ gzip:   0.48 kB
+dist/assets/Knife-Bgk3_K2e.glb             12.35 kB
+dist/assets/Wall-U0qu08-K.glb              13.58 kB
+dist/assets/plate-Ce0JGgLA.glb             14.54 kB
+dist/assets/X-C3_-BvWx.glb                 16.30 kB
+dist/assets/bun_bottom-CaQU29u5.glb        17.32 kB
+dist/assets/Seat-CBvN5NTl.glb              19.48 kB
+dist/assets/tomato_raw-B9m6NTNK.glb        22.86 kB
+dist/assets/A-bMxV9cY5.glb                 29.82 kB
+dist/assets/lettuce_raw-C6XwE1qJ.glb       34.22 kB
+dist/assets/service-music-vBYzjKD9.ogg     36.93 kB
+dist/assets/K-DFcBM5Bj.glb                 37.13 kB
+dist/assets/B-CJbbvG13.glb                 37.48 kB
+dist/assets/C-DhCmdkSp.glb                 37.52 kB
+dist/assets/L-CZgzJ7mm.glb                 37.52 kB
+dist/assets/M-CcJ0ahQ_.glb                 37.52 kB
+dist/assets/P-C5sXfEdT.glb                 37.52 kB
+dist/assets/lettuce_prepped-BqrXT1Z_.glb   39.98 kB
+dist/assets/dirty-CWARb-P9.glb             41.41 kB
+dist/assets/S-BfuiMkLC.glb                 43.66 kB
+dist/assets/R-CeXvm0hN.glb                 48.50 kB
+dist/assets/W-70PECHNw.glb                 61.92 kB
+dist/assets/T-DOaN3A6a.glb                 62.62 kB
+dist/assets/G-BUJ7P__8.glb                 65.96 kB
+dist/assets/tomato_prepped-Dr-Hm3-m.glb    72.99 kB
+dist/assets/bun_top-BlPvStF4.glb           81.47 kB
+dist/assets/perfect-RM433n6t.glb           86.62 kB
+dist/assets/cooking-D7wfy2xv.glb           87.34 kB
+dist/assets/room-tone-DnPJGrw0.ogg         87.95 kB
+dist/assets/burnt-9Es0mGmb.glb             88.08 kB
+dist/assets/overcooked-BdJBCg7I.glb        88.09 kB
+dist/assets/raw-D7A56l-d.glb               88.14 kB
+dist/assets/Sign-B5Oj8Tda.glb             101.89 kB
+dist/assets/guest-BuEeazgR.glb            411.64 kB
+dist/assets/lina-BeFmPqer.glb             455.49 kB
+dist/assets/max-V7qga1JN.glb              471.62 kB
+dist/assets/index-DIZ90CcF.css              6.17 kB │ gzip:   2.20 kB
+dist/assets/index-CVX6yqy6.js               3.48 kB │ gzip:   1.67 kB
+dist/assets/pack-G0rULBN-.js               86.55 kB │ gzip:  24.80 kB
+dist/assets/ui-BZIhsUhe.js                677.91 kB │ gzip: 174.56 kB
+
+✓ built in 365ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+npm notice
+npm notice New major version of npm available! 11.19.1 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice
+
+> kitchen-chaos-3d@0.1.0-preview.1 test:e2e
+> playwright test --workers=1
+
+[WebServer] (node:7301) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:7314) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:7334) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium-1280x720] › tests/e2e/boot.spec.ts:3:1 › Q01 boots the production build with clean browser and asset requests (4.9s)
+  ✓   2 [chromium-1280x720] › tests/e2e/boot.spec.ts:25:1 › Q01 recovers from a missing content asset through a keyboard retry (2.4s)
+  ✓   3 [chromium-1280x720] › tests/e2e/boot.spec.ts:39:1 › Q01 explains how to recover when WebGL 2 is unavailable (1.4s)
+  ✓   4 [chromium-1280x720] › tests/e2e/career.spec.ts:3:1 › Q08–Q09 previews blocked placement, buys a stove, undoes and recovers a saved career (8.8s)
+  ✓   5 [chromium-1280x720] › tests/e2e/career.spec.ts:35:1 › Q10–Q11 unlocks sound, pauses loops and applies low graphics (4.1s)
+  ✓   6 [chromium-1280x720] › tests/e2e/shift.spec.ts:29:1 › Q02–Q06, Q11, Q15–Q17 cooks all three recipes through keyboard input and settles a full shift (47.0s)
+(node:7864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [chromium-1920x1080] › tests/e2e/boot.spec.ts:3:1 › Q01 boots the production build with clean browser and asset requests (4.7s)
+  ✓   8 [chromium-1920x1080] › tests/e2e/boot.spec.ts:25:1 › Q01 recovers from a missing content asset through a keyboard retry (2.5s)
+  ✓   9 [chromium-1920x1080] › tests/e2e/boot.spec.ts:39:1 › Q01 explains how to recover when WebGL 2 is unavailable (1.4s)
+  ✓  10 [chromium-1920x1080] › tests/e2e/career.spec.ts:3:1 › Q08–Q09 previews blocked placement, buys a stove, undoes and recovers a saved career (11.6s)
+  ✓  11 [chromium-1920x1080] › tests/e2e/career.spec.ts:35:1 › Q10–Q11 unlocks sound, pauses loops and applies low graphics (4.4s)
+  ✓  12 [chromium-1920x1080] › tests/e2e/shift.spec.ts:29:1 › Q02–Q06, Q11, Q15–Q17 cooks all three recipes through keyboard input and settles a full shift (1.4m)
+
+  12 passed (3.0m)
+npm notice
+npm notice New major version of npm available! 11.19.1 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice

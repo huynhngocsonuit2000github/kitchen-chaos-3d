@@ -69,7 +69,7 @@ Tested source `5d818427a52abe377f77cd54561952be327d4343`, preview `0.1.0-preview
 | Q16 | PASS | Simulation confirms intentional waste increments and plate retention. |
 | Q17 | PASS (M1) | Browser verifies ticket labels, clock, serving counts and results including $44 sales. Simulation checks tip and settlement math. |
 | Q19 | PASS (M1) | Existing schema and reference tests plus a reachable approach for every M1 station. |
-| Q07–Q10, Q12–Q13, Q18, Q20–Q22 | NOT_RUN (M1) | Staff, management, saves, audio, final art, hardware performance, seating and later modes are scheduled after this gate. |
+| Q07–Q10, Q12–Q13, Q18, Q21–Q22 | NOT_RUN (M1) | Staff, management, saves, audio, final art, hardware performance, seating and later modes are scheduled after this gate. |
 
 ### Defects found and addressed
 
@@ -83,3 +83,62 @@ The automated real-input run intentionally serves three orders and exercises los
 The concurrent software-WebGL run passed seven browser cases and hit the 180-second timeout in the 1280×720 test after capturing results. Commit `c6a6ef3` runs the two Playwright projects serially. Browser verification uses the same `5d81842` application build. Vite emitted a size warning for the 556 kB minified Three.js/UI chunk, which was 141 kB gzip. The build completed successfully.
 
 Local results across the final run and serial recovery were 13 passing unit checks and 8 passing browser cases. The serial 1280×720 shift passed in 1.2 minutes. Install, typecheck, lint, build, workflow lint and static Pages smoke returned exit 0. The closing receipt shows nine misses, $7 tips, $9 ingredient costs and $122 final cash.
+
+## M2 Burger Town vertical slice candidate
+
+Candidate `dca5fda`, 2026-11-25. Chromium 156.0.8078.79 ran on Linux x86-64 with ANGLE SwiftShader and three Intel Xeon Platinum 8573C virtual CPUs. All browser evidence refers to the build at `/kitchen-chaos-3d/`. The Producer confirmed all seven M1 live playtest checks passed before M2 started.
+
+| QA ID | Status | Evidence |
+|---|---|---|
+| Q01 | PASS | Chromium boots with clean console and requests, retries a missing fixture, reports WebGL 2 recovery. |
+| Q02–Q06, Q15–Q17 | PASS | Browser keyboard run covers Classic, Cheese and Garden, a rejected plate, cook timing, switching, washing, a loss receipt, retry and confirmed restart. Unit cases cover collision, atomic transfers, burnt/raw rejection and winning settlement. |
+| Q07 | PASS (simulation) | Partner navigates to prep and relinquishes the task on manual takeover. Integrated browser task and timed cancellation walkthrough remain open. |
+| Q08, Q18 | PASS | Real browser rejects the blocked placement, commits a $60 stove placement, undoes it and buys the two-plate upgrade. |
+| Q09 | PASS (automated scenarios) | Each day opens with its configured menu and reaches winning settlement in simulation with supplied valid plates. Browser covers reload and recovery from a corrupt current save. An unassisted seven-day career and complete untimed practice walkthrough remain NOT_RUN. |
+| Q10 | PASS (browser controls) | Room/music play only after a gesture, mute changes volume and pause stops loops. Human listening and cue-priority review remain NOT_RUN. |
+| Q11 | PASS (browser scenarios) | Keyboard flows, 1280×720 and 1920×1080 captures, and low graphics canvas scale. Full accessibility review remains NOT_RUN. |
+| Q12 | FAIL (art rubric) | Full runtime GLBs replace the graybox props, but the art comparison scores multiple dimensions below 3. [Screenshots and side-by-side observations](evidence/m2/README.md). |
+| Q13 | BLOCKED (device) | See measured SwiftShader results below. Representative accelerated Chrome, Edge and Firefox budgets are NOT_RUN. |
+| Q14 | NOT_RUN (M2 hosting) | No M2 deployment or deployed smoke. |
+| Q20 | PASS (simulation) | Customer sits, eats for eight seconds, leaves, and returns one dirty plate. Guest palette variants share one silhouette. Arrival and departure still need animated travel between queue and seat. |
+| Q19 | PASS | Existing pack rules and configured layout validation. |
+| Q21–Q22 | NOT_RUN | Older-save migration and post-slice modes. |
+
+### Candidate defects and readiness
+
+- M2-QA-01 (P1, open, art) · The active kitchen remains sparser than the visual target and the dishes are hard to distinguish at distance. Compare the 720p stove and hatch shots. Improve background styling, recipe silhouettes and ticket icon specificity before a G2 review.
+- M2-QA-02 (P1, open, animation) · Seated and eating states render, while guest arrival and departure currently switch positions directly. Author and validate the transitions, refine chef hand contact and foot placement, and add differentiated guest silhouettes. Recorded full motion review remains open.
+- M2-QA-03 (P1, open, performance) · SwiftShader cannot meet interactive frame budgets. The candidate needs an accelerated hardware run before comparing to the 60 FPS standard and 30 FPS low targets.
+- M2-QA-04 (P2, open, UI/audio) · HUD and planning icon sets and the dedicated cash/upgrade cue remain incomplete. The planning preview shows a cell and validates placement but still needs the full management presentation. Persistent audio settings and final mixed-audio review remain open.
+- M2-QA-05 (fixed) · Blender gave repeated socket names numeric suffixes. Three.js sanitizes the separator. Runtime accepts both names and now loads both chefs and all socket heights.
+- M2-QA-06 (fixed) · Reworked skin export so the rig GLBs have root skin meshes. The validator now reports zero errors and zero warnings for all runtime GLBs.
+- M2-QA-07 (fixed) · The earlier software-rendered browser scenario timed out. Coalescing synchronous state updates before drawing restored two-viewport completion without changing simulation. Static restaurant props share material batches.
+
+The ledger records checksums, paths and provenance for original GLB and audio files. `assets/source/` contains Blender scenes and WAV source. Runtime asset readiness stays in review. The concept images are reference assets outside the web bundle.
+
+### Verification commands
+
+| Command | Exit | Result |
+|---|---:|---|
+| `npm ci --cache /workspace/.npm-cache` | 0 | Locked dependencies installed |
+| `npm run typecheck` | 0 | Strict TypeScript check |
+| `npm run lint` | 0 | ESLint |
+| `npm test` | 0 | 16 unit tests |
+| `VITE_BASE_PATH=/kitchen-chaos-3d/ npm run build` | 0 | 3,712,236 uncompressed bytes in `dist/assets`; Vite large chunk warning |
+| `npm run test:e2e -- --workers=1` with the project base and system Chromium | 0 | 12 browser tests across two viewports |
+| `node tools/art/validate_glbs.mjs` with the pinned validator | 0 | 37 GLBs, zero errors and zero warnings |
+
+[Verification log](evidence/m2/verification.log) · [GLB-by-GLB audit](evidence/m2/gltf-validation.jsonl)
+
+### Software-rendered performance
+
+Used the production subpath build and `tools/qa/browser-perf.mjs`. Each row is a fresh browser page. Startup is navigation to the visible Start shift button. The sample collects browser animation frame intervals for 2.2 seconds while holding W in the opening career shift. Draw calls and triangles are the last rendered frame, and heap is Chromium's approximate JavaScript heap. Texture GPU memory and actual HTTP transfer bytes were unmeasured.
+
+| Viewport | Graphics | Startup | FPS | p95 frame | Frames | Draw calls | Triangles | JS heap |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| 1280×720 | Standard | 1.89 s | 4 | 349.9 ms | 8 | 115 | 59,108 | 29 MiB |
+| 1280×720 | Low | 1.75 s | 3 | 383.3 ms | 8 | 115 | 59,108 | 29 MiB |
+| 1920×1080 | Standard | 1.90 s | 2 | 616.6 ms | 5 | 115 | 59,108 | 16 MiB |
+| 1920×1080 | Low | 2.32 s | 3 | 450.0 ms | 7 | 115 | 59,108 | 17 MiB |
+
+These short software-only samples are below the 60 FPS standard and 30 FPS low targets and show no consistent low-quality improvement. They establish a repeatable baseline for this environment. Accelerated browser and peak-demand measurements are required to evaluate the device budgets. [Raw performance data](evidence/m2/performance.jsonl)

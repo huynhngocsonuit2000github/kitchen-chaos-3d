@@ -1,6 +1,8 @@
 # Kitchen Chaos 3D
 
-Run a five-minute Burger Town shift in the M1 graybox preview. Switch between Max and Lina, cook three burgers, and try to serve ten orders before closing.
+The Burger Town M2 candidate includes a five-minute quick shift and a local career. In quick shift, switch between Max and Lina, cook three burgers and try to serve ten orders before closing. Open **Career** for Day 1 practice, equipment planning, seated customers and seven days of progression. In a career shift, press **1** to assign available prep or **2** to assign available dishwashing to the inactive chef.
+
+The M2 candidate is in draft review. See the [gameplay captures](reports/evidence/m2/README.md) and [G2 status](production/QUALITY_GATES.md).
 
 ## Play locally
 
