@@ -26,3 +26,7 @@ Producer owns the M2 scope decision and any Pages publication approval. The G1 d
 ## G2 candidate review — BLOCKED
 
 Source `dca5fda`, 2026-11-25. The [M2 QA report](../reports/QA_REPORT.md#m2-burger-town-vertical-slice-candidate) records the visual gap, device measurements and open acceptance items. Structural GLB and functional evidence support continued M2 review. Final art, representative Chrome/Edge/Firefox device budgets, career playtest and Producer approval remain open. No deployment or content expansion was authorized.
+
+### G2 remediation status
+
+G2 remains **BLOCKED**. Software performance improved after batching and reducing framebuffer work. Accelerated hardware acceptance and final human visual and career playtest approval remain required. See [M2 remediation evidence](../reports/QA_REPORT.md#m2-g2-remediation).

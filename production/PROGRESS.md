@@ -27,3 +27,7 @@ G0 **PASS** by Producer approval. G1 **PASS** for the graybox prototype. G2–G4
 On 2026-11-25 the Producer reported that all seven M1 live playtest checks passed and authorized M2. The M2 candidate starts from `ed40078`. Source revision `dca5fda` includes original Blender GLBs and source scenes, layered food states, shared chef and guest armatures, kitchen lighting and effects, service audio, and a planning UI. Quick shift preserves the M1 seed-42 Day 3 scenario. Career adds Day 1 practice, seven day configurations, seated customers, partner prep/wash, appliance placement, purchases, undo, and versioned saves.
 
 M2-01 through M2-05 are in review. M2-06 remains open for visual acceptance, representative device testing, and an integrated human run. See [M2 QA](../reports/QA_REPORT.md#m2-burger-town-vertical-slice-candidate) for evidence and defects. G2 has not passed. Production publication and M3 remain pending Producer authorization.
+
+### M2 refinement after PR #3 merge
+
+The Producer explicitly kept G2 open. GitHub had already merged PR #3 by the time the refinement began. Renderer, diner detail, food and UI readability, and visual motion changes continue from the same head branch. The [refinement QA report](../reports/QA_REPORT.md#m2-g2-remediation) records matched software performance samples, current screenshots, and the remaining accelerated device and human review requirements.

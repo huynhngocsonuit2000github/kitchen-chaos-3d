@@ -142,3 +142,33 @@ Used the production subpath build and `tools/qa/browser-perf.mjs`. Each row is a
 | 1920×1080 | Low | 2.32 s | 3 | 450.0 ms | 7 | 115 | 59,108 | 17 MiB |
 
 These short software-only samples are below the 60 FPS standard and 30 FPS low targets and show no consistent low-quality improvement. They establish a repeatable baseline for this environment. Accelerated browser and peak-demand measurements are required to evaluate the device budgets. [Raw performance data](evidence/m2/performance.jsonl)
+
+## M2 G2 remediation
+
+Revision `699318c` continues the merged PR #3 head `e8569a0`. The refinement changes rendering and presentation. Shift rules, movement input, seating timing, career persistence and equipment placement retain their existing implementations.
+
+- Static geometry uses baked vertex lighting and material colors. Major fixed props merge into a single draw. The framebuffer covers the projected board, stays centered, omits multisample antialiasing, and uses a smaller pixel ratio in low mode. Skinned actors use Lambert lighting. The existing contact-shadow texture remains shared.
+- The Blender-authored diner window and awning add 168 triangles and 23,184 bytes to the runtime asset set. The asset is included in the existing static batch.
+- The order rail shows three recipe silhouettes, ingredient icons with accessible names, and a patience bar. Counter badges identify actual contents, including incomplete plates and patty states. Chefs turn toward input, stop walking animations when holding food at rest, and retain their existing interaction clips. Guests visibly walk to and from seating or queue positions.
+- Remaining visual limitations include the sparse reference-relative background, interchangeable guest silhouettes, close-contact motion and the complete UI/audio review. The reduced-motion path skips interpolated guest travel. The software renderer shows more visible edge aliasing without MSAA. Human career and visual acceptance remain open.
+
+[Gameplay evidence and comparison](evidence/m2-refinement/README.md)
+
+### Matched performance comparison
+
+Same Chromium 156.0.8078.79, SwiftShader, production subpath, seed, camera and 2.2-second opening career movement sample. Values are one short run per mode. Draw calls reflect the final sampled frame.
+
+| Viewport and mode | Baseline FPS | Final FPS | Baseline p95 | Final p95 |
+|---|---:|---:|---:|---:|
+| 1280×720 standard | 3 | 20 | 316.6 ms | 83.4 ms |
+| 1280×720 low | 5 | 27 | 249.9 ms | 66.8 ms |
+| 1920×1080 standard | 2 | 12 | 666.6 ms | 150.1 ms |
+| 1920×1080 low | 2 | 22 | 466.5 ms | 83.3 ms |
+
+Draw calls fell from 115 to 22. Final-frame triangles were 59,554 versus 59,108 before. Startup was 1.31–1.65 s versus 1.97–3.81 s before. The intermediate run reached 17–23 FPS at 59 draw calls, so the final batching improved call count without a consistent frame-rate gain over that intermediate pass. The opening sample does not establish peak-demand performance.
+
+An accelerated Chromium probe with `--use-angle=gl` still reported SwANGLE/SwiftShader as its only device and WebGL unavailable in that forced backend. This sandbox exposes neither a DRM render device nor an NVIDIA device. G2 still requires representative hardware measurements, an acceptable final visual review and an integrated human career playtest. The final software run also misses both frame-rate targets.
+
+[Baseline](evidence/m2-refinement/performance-before.jsonl) · [Intermediate](evidence/m2-refinement/performance-intermediate.jsonl) · [Final](evidence/m2-refinement/performance-after.jsonl)
+
+Final checks returned exit 0 for TypeScript, ESLint, the production subpath build, 16 unit tests and 12 Chromium browser tests at both viewports. The full browser shift still exercises all three recipes and settlement. The new assertions cover the perfect-patty station badge and the three rendered ticket icons and patience bars. Asset validation found zero errors and zero warnings across 38 GLBs. [Browser log](evidence/m2-refinement/browser-verification.log)
