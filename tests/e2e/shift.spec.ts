@@ -141,6 +141,7 @@ test('Q02–Q06, Q11, Q15–Q17 cooks all three recipes through keyboard input a
   await page.getByRole('button', { name: 'Resume shift' }).click();
   await tick(240);
   await expect(equipment).toContainText('Perfect patty');
+  await expect(page.locator('.station-food[data-state=perfect]')).toHaveText('Stove · Perfect');
   await page.screenshot({ path: info.outputPath('01-stove-ready.png') });
   await press('e');
   await transfer('A');
@@ -183,6 +184,8 @@ test('Q02–Q06, Q11, Q15–Q17 cooks all three recipes through keyboard input a
 
   await tick(130 * 60 - elapsed);
   await expect(page.locator('#tickets li')).toHaveCount(3);
+  await expect(page.locator('#tickets .order-icon')).toHaveCount(3);
+  await expect(page.locator('#tickets .ticket-meter')).toHaveCount(3);
   await page.screenshot({ path: info.outputPath('03-busy-order-rail.png') });
   await tick(18000 - elapsed + 6);
   await expect(page.getByRole('heading', { name: 'Target missed' })).toBeVisible();

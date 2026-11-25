@@ -2,7 +2,7 @@ import * as T from 'three';
 import { clone as cloneRig } from 'three/addons/utils/SkeletonUtils.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ingredientIcon } from '../game/food-icons';
-import { bakeProp } from './bake';
+import { bakeProp, batchCharacter } from './bake';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { cells, stations, stationNames } from '../game/layout';
 import type { Placement, StationId } from '../game/layout';
@@ -179,7 +179,6 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
       object.add(model, root);
     }
     scene.add(object);
-    contactShadow(object, 0, 0);
     const label = document.createElement('span');
     label.className = 'station-label';
     label.textContent = stationNames[tile];
@@ -188,6 +187,11 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
     labels.append(label, detail);
     return [tile, { root, label, detail, detailKey: '', object, x: 0, z: 0 }];
   }));
+  const stationShadows = new T.InstancedMesh(shadowPlane, shade, plateSlots.size);
+  stationShadows.frustumCulled = false;
+  scene.add(stationShadows);
+  const shadowTransform = new T.Matrix4();
+  let shadowLayout: Shift['stations'] | undefined;
   const modules = new Map<string, { x: number; z: number; yaw: number; color?: string }[]>([
     ['Tile', []], ['Wall', []], ['Trim', []],
   ]);
@@ -273,6 +277,7 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
     scene.add(instances);
   }
 
+  for (const { scene: character } of characters) batchCharacter(character);
   const characterMaterials = new Map<T.Material, T.MeshLambertMaterial>();
   for (const { scene: character } of characters) character.traverse((node) => {
     if (!(node instanceof T.Mesh) || !(node.material instanceof T.MeshStandardMaterial)) return;
@@ -384,6 +389,14 @@ export async function createKitchen(stage: HTMLElement, labels: HTMLElement) {
     if (preview) {
       ghost.position.set(preview.position.x, .035, preview.position.z);
       (ghost.material as T.MeshLambertMaterial).color.set(preview.valid ? '#eece70' : '#cf4333');
+    }
+    if (shadowLayout !== shift.stations) {
+      shadowLayout = shift.stations;
+      stationShadows.count = shadowLayout.length;
+      shadowLayout.forEach(({ x, z }, i) => {
+        stationShadows.setMatrixAt(i, shadowTransform.makeTranslation(x, .008, z));
+      });
+      stationShadows.instanceMatrix.needsUpdate = true;
     }
     for (const [tile, slot] of plateSlots) {
       const station = shift.stations.find((placement) => placement.tile === tile);

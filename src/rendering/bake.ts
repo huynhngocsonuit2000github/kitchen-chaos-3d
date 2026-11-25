@@ -37,3 +37,31 @@ export function bakeProp(group: T.Group) {
   for (const mesh of meshes) mesh.removeFromParent();
   group.add(new T.Mesh(merged, material));
 }
+
+/** Keep the original skeleton and animation tracks while combining body materials into vertex colors. */
+export function batchCharacter(group: T.Group) {
+  const skin = group.children.filter((node): node is T.SkinnedMesh => node instanceof T.SkinnedMesh);
+  const candidate = skin.filter((node) => node.material instanceof T.MeshStandardMaterial &&
+    node.material.name !== 'Guest apron');
+  const first = candidate[0];
+  if (!first || candidate.length < 2) return;
+  if (candidate.some((node) => node.skeleton !== first.skeleton || !node.bindMatrix.equals(first.bindMatrix) ||
+    node.position.lengthSq() !== 0 || node.quaternion.w !== 1 || node.scale.distanceToSquared(new T.Vector3(1, 1, 1)) !== 0)) return;
+  const geometries = candidate.map((node) => {
+    const geometry = node.geometry.clone();
+    geometry.deleteAttribute('uv');
+    const count = geometry.getAttribute('position').count;
+    const colors = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) (node.material as T.MeshStandardMaterial).color.toArray(colors, i * 3);
+    geometry.setAttribute('color', new T.BufferAttribute(colors, 3));
+    return geometry;
+  });
+  const merged = mergeGeometries(geometries);
+  for (const geometry of geometries) geometry.dispose();
+  if (!merged) return;
+  const body = new T.SkinnedMesh(merged, new T.MeshLambertMaterial({ vertexColors: true }));
+  body.bind(first.skeleton, first.bindMatrix);
+  body.frustumCulled = false;
+  group.remove(...candidate);
+  group.add(body);
+}
